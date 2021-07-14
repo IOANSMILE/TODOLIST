@@ -25,13 +25,15 @@
 //     height:9
 // })
 
-
+function create(tagName, type, className) {
+    const checkbox = document.createElement(tagName) // создание элемента (createElement) чекбокс
+    checkbox.type = type // говорим браузеру чтоб отобразил элемент в качестве чекбокса
+    checkbox.className = className // присваиваем класс
+}
 
 //№3 Создание элементов списка дел
 function createTodoItem (title){  // создание DOM элементов и соеденение их вместе
-    const checkbox = document.createElement("input") // создание элемента (createElement) чекбокс
-    checkbox.type = "checkbox" // говорим браузеру чтоб отобразил элемент в качестве чекбокса
-    checkbox.className = "checkbox" // присваиваем класс
+    const checkbox = create("input", "checkbox", "checkbox")// создание элемента (createElement) чекбокс
 
     const label = document.createElement("label"); // создание элемента лэйбл,  туда выводится дело которое мы добавили
     label.innerText = title; // отправляем в лэйбл текст из инпут
@@ -140,7 +142,10 @@ function init (){
     todoItems.forEach(item => bindEvents(item));
 }
 
-init();
+document.addEventListener("DOMContentLoaded", () => {
+    // Страница загружена до конца и можно рабоать с ее HTML кодом.
+    init();
+})
 
 
 

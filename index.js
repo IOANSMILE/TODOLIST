@@ -25,48 +25,55 @@
 //     height:9
 // })
 
-function create(tagName, type, className) {
-    const checkbox = document.createElement(tagName) // создание элемента (createElement) чекбокс
-    checkbox.type = type // говорим браузеру чтоб отобразил элемент в качестве чекбокса
-    checkbox.className = className // присваиваем класс
+
+function createElement(tagName, props, ...children) {
+    const element = document.createElement(tagName) // создание элемента (createElement) чекбокс
+    Object.keys(props).forEach(key => element[key] = props[key]);  // перебираем свойства у объекта и присваиваем значения
+
+    if (children.length>0){
+        children.forEach(child => {
+            if (typeof child === "string"){  // если строка
+                child = document.createTextNode(child); // создаем DOM узел
+            }
+            element.appendChild(child);
+        });
+    }
+    console.log(element);
+    return element;
 }
+
+
 
 //№3 Создание элементов списка дел
 function createTodoItem (title){  // создание DOM элементов и соеденение их вместе
-    const checkbox = create("input", "checkbox", "checkbox")// создание элемента (createElement) чекбокс
-
-    const label = document.createElement("label"); // создание элемента лэйбл,  туда выводится дело которое мы добавили
-    label.innerText = title; // отправляем в лэйбл текст из инпут
-    label.className = "title"; // присваиваем класс
-
-
-    const editInput = document.createElement("input"); // поле для изменения задачи
-    editInput.type = "text";
-    editInput.className = "textfield";
-
-
-    const editButton = document.createElement("button"); // кнопка изменить
-    editButton.innerText = "Изменить"; // присваиваем текст изменить
-    editButton.className = "edit";
-
-    const deletButton = document.createElement("button"); // кнопка удалить
-    deletButton.innerText = "Удалить"; // присваиваем текст удалить
-    deletButton.className = "delete";
-
-
-    const listItem = document.createElement("li"); // создание тега элементов списка
-    listItem.className = "todo-item";
-
-    listItem.appendChild(checkbox); // помещаем все созданные выше элементы с помощью метода  appendChild внутрь listItem по порядку
-    listItem.appendChild(label);
-    listItem.appendChild(editInput);
-    listItem.appendChild(editButton);
-    listItem.appendChild(deletButton);
-
+    const checkbox = create("input", { type: "checkbox", className: "checkbox" }); // создание элемента (createElement) чекбокс
+    const label = create("label", {className: "title"}, title); // создание элемента лэйбл,  туда выводится дело которое мы добавили
+    const editInput = create("input", {type: "text", className: "textfield"}); // поле для изменения задачи
+    const editButton = create("button", {className: "edit"}, "Изменить"); // кнопка изменить
+    const deletButton = create("button", {className: "delete"}, "Удалить"); // кнопка удалить
+    const listItem = create("li", {className: "todo-item"}, checkbox, label, editInput, editButton, deletButton); // создание тега элементов списка
     bindEvents(listItem); // №5 привязываем события
-
     return listItem; // возвращаем все
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //5 Привязать событие
 function bindEvents (todoItem){ // взаимодействие с чекбокс
@@ -128,6 +135,19 @@ function deleteTodoItem (){  // удаление элемента
 
 }
 
+
+// работать не будет поскольку все изменения происходят непосредственно в DOM необходимо все к чертям переписывать 
+// function load (){
+//     const data = JSON.parse(localStorage.getItem("todos"));
+//     return
+//
+// }
+//
+// function save (data) {
+//     const strig = JSON.stringify(data);
+//     localStorage.setItem("todos", strig);
+//
+// }
 
 
 // №1 Создание ссылок на элементы дум

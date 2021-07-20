@@ -1,9 +1,4 @@
 
-
-
-
-
-
  // в душе не чаю почему она не экспортируется
 function createElement(tagName, props, ...children) {
     const element = document.createElement(tagName) // создание элемента (createElement) чекбокс
@@ -20,4 +15,24 @@ function createElement(tagName, props, ...children) {
     console.log(element);
     return element;
 }
-export  {createElement};
+
+class EventEmitter {
+    constructor() {
+        this.events  = {}
+    }
+
+    on(type, callback){
+        this.events[type] = this.events[type] || [];
+        this.events[type].push(callback);
+
+    }
+
+    emit(type, arg){
+        if (this.events[type]){
+            this.events[type].forEach(callback => callback(arg));
+        }
+
+    }
+}
+
+export  {createElement, EventEmitter};

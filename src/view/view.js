@@ -1,14 +1,15 @@
-import {createElement} from './helpers.js' // все полетело по пизде тут, 37,42
+import {createElement, EventEmitter} from './helpers.js' // все полетело по пизде тут, 37,42
 
 
 // работа с DOM
-class View {
+class View extends EventEmitter {
     constructor() {
+        super ();
         this.form = document.getElementById("todo-form"); // обращение к форме
         this.input = document.getElementById("add-input") // поле для ввода задачи
         this.list = document.getElementById("todo-list") // поле где висят задачи
 
-        this.form.addEventListener("submit", this.handleAdd.bind(this));
+        this.form.addEventListener("submit", this.handleAdd.bind(this)); // по нажатию кнопки добавить вызывается метод handleAdd
     }
 
     createElement(todo){
@@ -24,7 +25,7 @@ class View {
 
     }
 
-    addEventListeners(item){
+    addEventListeners(listItem){
         const checkbox = listItem.querySelector(".checkbox");
         const editButton = listItem.querySelector("button.edit");
         const removeButton = listItem.querySelector("button.remove");
@@ -34,18 +35,16 @@ class View {
         editButton.addEventListener("click", this.handleEdit.bind(this));
 
         removeButton.addEventListener("click", handleRemove.bind(this));
-        return item;
+        return listItem;
     }
 
-    handleAdd (event){
-        event.preventDefault();
+    handleAdd (event){  // метод проверяет есть ли в поле ввода текст
+        event.preventDefault(); // останавливает отправку данных на сервер
 
-        if (!this.input.value){
-            return alert("Введите название задачи");
-        }
+        if (!this.input.value){ return alert("Введите название задачи");} // если такста нет то вылетает сообщение
+        const value = this.input.value; // если проверка пройдена мы забираем то что находится в поле и нужно как то передать дело контролеру
 
-        const value = this.input.value;
-        // add item to model
+        this.emit("add", value);
     }
 
 
@@ -55,7 +54,7 @@ class View {
          const id = listItem.getAttribute("data-id");
          const completed = target.completed;
 
-        //update model
+        this.emit("toggle", {id, completed});
 
     }
 
@@ -69,7 +68,7 @@ class View {
         const isEditing = listItem.classList.contains("editing");
 
         if (isEditing){
-            //update model
+            this.emit("edit", {id, title})
         } else {
             input.value = label.textContent;
             editButton.textContent = "Сохранить";
@@ -79,7 +78,7 @@ class View {
 
     handleRemove({target}){
         const listItem = target.parentNode;
-        //remove item from model
+        this.emit("remove", id);
     }
 
 
@@ -88,7 +87,7 @@ class View {
         return this.list.querySelector('[data-id ="${id}"]');
     }
 
-    addItem(todo){
+    addItem(todo){ // передаем созданный объект с контролера
         const listItem = this.createElement(todo); // создаем объект
         this.input.value = ""; // чистим импут
         this.list.appendChild(listItem); // создаем элементы внутри формы

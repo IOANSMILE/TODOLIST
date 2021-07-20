@@ -11,11 +11,15 @@ class Init {
 
     addItem(item){ // метод добавления данных в состояние
         this.state.push(item) // добавление элементов в массив
+
+        return item;
     }
 
     updateItem(id, data){ // метод для обновления предметного состояния (id -объект который нужен, data - данные которые нужно обновить)
         const item = this.getItem(id);
         Object.keys(data).forEach(prop => item[prop] = data[prop]) // перебор массива
+
+        return item;
     }
 
     removeItem(id){ // удаление метода из массива

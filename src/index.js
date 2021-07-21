@@ -1,10 +1,13 @@
 import Init from "./model/model.js";
 import View from "./view/view.js";
-import Controller from "./controller/requests.js";
+import Todo from "./controller/requests.js";
 
 const init = new Init();
 const view = new View();
-const controller = new Controller(init,view);
+
+
+
+const controller = new Todo(init,view);
 
 
 
